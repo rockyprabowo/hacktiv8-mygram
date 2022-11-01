@@ -1,0 +1,440 @@
+### RegisterUser
+POST http://{{host}}:{{port}}/users/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}",
+  "email": "{{email}}",
+  "age": 21
+}
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+%}
+
+### RegisterUserInvalid
+POST http://{{host}}:{{port}}/users/register
+Accept: application/json
+Content-Type: application/json
+
+{}
+
+> {%
+
+client.test("Request executed with Bad Request response", function() {
+    client.assert(response.status === 400, "Response status is not 400")
+})
+
+%}
+
+### LoginUser
+POST http://{{host}}:{{port}}/users/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+ }
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200")
+})
+
+client.test("Response payload got the JWT token.", function() {
+    client.assert(!!response.body.token, "Response doesn't have token.")
+})
+
+client.global.set("auth_token", response.body.token)
+
+%}
+
+### GetCurrentUser
+GET http://{{host}}:{{port}}/me
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200")
+    })
+
+    client.test("Response content-type is json", function() {
+        const type = response.contentType.mimeType
+        client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'")
+    })
+%}
+
+### CreateSocialMedia
+POST http://{{host}}:{{port}}/socialmedias
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Facebook",
+  "social_media_url": "https://www.facebook.com/"
+}
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200")
+})
+
+client.global.set("current_social_media_id", response.body.id)
+
+ %}
+
+
+### GetSocialMedia
+GET http://{{host}}:{{port}}/socialmedias
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200")
+})
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'")
+})
+
+%}
+
+### EditSocialMedia
+PUT http://{{host}}:{{port}}/socialmedias/{{current_social_media_id}}
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Facebook EDITED",
+  "social_media_url": "https://www.facebook.com/edited"
+}
+
+> {%
+
+client.global.set("edited_social_media_name", response.body.name)
+client.global.set("edited_social_media_url", response.body.social_media_url)
+
+%}
+
+### GetSocialMediaAfterEdit
+GET http://{{host}}:{{port}}/socialmedias
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200")
+})
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'")
+})
+
+client.test("Response contains edited data.", function () {
+    const data = response.body["social_medias"]
+    const currentSocialMediaID = parseInt(client.global.get("current_social_media_id"))
+    client.assert(data.length > 0, "Response has zero data.")
+    const filteredData = data.find(value => value.id === currentSocialMediaID)
+    const expectedName = client.global.get("edited_social_media_name")
+    const expectedURL = client.global.get("edited_social_media_url")
+
+    client.assert(filteredData.name === String(expectedName), "expected " + expectedName + " got " + filteredData.name)
+    client.assert(filteredData.social_media_url === String(expectedURL), "expected " + expectedName + " got " + filteredData.name)
+})
+
+%}
+
+### DeleteSocialMedia
+DELETE http://{{host}}:{{port}}/socialmedias/{{current_social_media_id}}
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+Content-Type: application/json
+
+### GetSocialMediaAfterDelete
+GET http://{{host}}:{{port}}/socialmedias
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200")
+})
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'")
+})
+
+client.test("Response doesn't contains deleted data.", function () {
+    const data = response.body.social_medias;
+    const currentSocialMediaID = parseInt(client.global.get("current_social_media_id"))
+    const filteredData = data.filter(value => value.id === currentSocialMediaID);
+    client.assert(filteredData.length === 0, "Response still got the removed data.")
+})
+
+%}
+
+### PostPhoto
+POST http://{{host}}:{{port}}/photos
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "Test",
+  "caption": "This is a test.",
+  "photo_url": "https://www.unsplash.com/"
+}
+> {%
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+client.global.set("current_photo_id", response.body.id)
+
+ %}
+
+### GetPhotos
+GET http://{{host}}:{{port}}/photos
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+%}
+
+### UpdatePhoto
+PUT http://{{host}}:{{port}}/photos/{{current_photo_id}}
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "Test EDITED",
+  "caption": "This is a test.",
+  "photo_url": "https://www.unsplash.com/edited"
+}
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+%}
+
+### GetPhotosAfterUpdate
+GET http://{{host}}:{{port}}/photos
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+%}
+
+### PostComment
+POST http://{{host}}:{{port}}/comments
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "message": "Test",
+  "photo_id": {{current_photo_id}}
+}
+> {%
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+ client.global.set("current_comment_id", response.body.id)
+ %}
+
+### GetComments
+GET http://{{host}}:{{port}}/comments
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+%}
+
+### UpdateComment
+PUT http://{{host}}:{{port}}/comments/{{current_comment_id}}
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "message": "Test EDITED"
+}
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+%}
+
+### GetCommentsAfterUpdate
+GET http://{{host}}:{{port}}/comments
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+%}
+
+### DeleteComment
+DELETE http://{{host}}:{{port}}/comments/{{current_comment_id}}
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+Content-Type: application/json
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+%}
+
+### GetCommentsAfterDelete
+GET http://{{host}}:{{port}}/comments
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+%}
+
+### DeletePhoto
+DELETE http://{{host}}:{{port}}/photos/{{current_photo_id}}
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+Content-Type: application/json
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+%}
+
+### GetPhotosAfterDelete
+GET http://{{host}}:{{port}}/photos
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+%}
