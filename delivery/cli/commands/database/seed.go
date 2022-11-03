@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"log"
-	"rocky.my.id/git/mygram/infrastructure/configurations/config"
+	"rocky.my.id/git/mygram/configurations/config"
 	"rocky.my.id/git/mygram/infrastructure/database/comment"
 	"rocky.my.id/git/mygram/infrastructure/database/common/connections"
 	"rocky.my.id/git/mygram/infrastructure/database/photo"

@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/spf13/viper"
 	"log"
-	"rocky.my.id/git/mygram/infrastructure/configurations/config/keys"
+	"rocky.my.id/git/mygram/configurations/config/keys"
 	"strings"
 )
 

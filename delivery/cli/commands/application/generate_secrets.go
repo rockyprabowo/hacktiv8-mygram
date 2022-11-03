@@ -8,7 +8,7 @@ import (
 	"io"
 	"log"
 	"math/big"
-	"rocky.my.id/git/mygram/infrastructure/configurations/config/keys"
+	"rocky.my.id/git/mygram/configurations/config/keys"
 )
 
 var GenerateSecretsCmd = &cobra.Command{

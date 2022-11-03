@@ -7,7 +7,7 @@ import (
 	"net"
 	"net/url"
 	"os"
-	"rocky.my.id/git/mygram/infrastructure/configurations/config/keys"
+	"rocky.my.id/git/mygram/configurations/config/keys"
 	"strings"
 )
 

@@ -4,12 +4,12 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
+	"rocky.my.id/git/mygram/configurations/config/keys"
 	"rocky.my.id/git/mygram/delivery/http/api/comment"
 	"rocky.my.id/git/mygram/delivery/http/api/common/middlewares"
 	"rocky.my.id/git/mygram/delivery/http/api/photo"
 	"rocky.my.id/git/mygram/delivery/http/api/social_media"
 	"rocky.my.id/git/mygram/delivery/http/api/user"
-	"rocky.my.id/git/mygram/infrastructure/configurations/config/keys"
 	"rocky.my.id/git/mygram/infrastructure/jwt/user"
 )
 

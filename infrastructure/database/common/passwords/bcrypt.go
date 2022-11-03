@@ -3,7 +3,7 @@ package passwords
 import (
 	"github.com/spf13/viper"
 	"golang.org/x/crypto/bcrypt"
-	"rocky.my.id/git/mygram/infrastructure/configurations/config/keys"
+	"rocky.my.id/git/mygram/configurations/config/keys"
 )
 
 func HashPassword(password string) ([]byte, error) {

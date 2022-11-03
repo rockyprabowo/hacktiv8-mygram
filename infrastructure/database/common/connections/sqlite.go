@@ -3,7 +3,7 @@ package database_connections
 import (
 	"errors"
 	"github.com/spf13/viper"
-	"rocky.my.id/git/mygram/infrastructure/configurations/config/keys"
+	"rocky.my.id/git/mygram/configurations/config/keys"
 )
 
 func SQLiteConfig() (string, error) {

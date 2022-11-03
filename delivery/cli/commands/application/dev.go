@@ -3,9 +3,9 @@ package application_commands
 import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"rocky.my.id/git/mygram/configurations/config"
+	"rocky.my.id/git/mygram/configurations/config/keys"
 	"rocky.my.id/git/mygram/delivery/cli/commands/database"
-	"rocky.my.id/git/mygram/infrastructure/configurations/config"
-	"rocky.my.id/git/mygram/infrastructure/configurations/config/keys"
 )
 
 var DevCmd = &cobra.Command{
