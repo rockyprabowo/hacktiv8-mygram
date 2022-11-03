@@ -1,5 +1,7 @@
 package exceptions
 
-import "errors"
+import (
+	"fmt"
+)
 
-var PhotoNotFoundError = errors.New("photo doesn't exist")
+var PhotoNotFoundError = fmt.Errorf("photo %w", EntityNotFound)

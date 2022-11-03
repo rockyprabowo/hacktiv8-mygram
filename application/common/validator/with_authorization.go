@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/jellydator/validation"
 	"rocky.my.id/git/mygram/application/common/authorization"
-	"rocky.my.id/git/mygram/domain/exceptions"
 )
 
 type WithResourceOwnerAuthorization struct {
@@ -24,9 +23,9 @@ func (v WithResourceOwnerAuthorization) Execute(ctx context.Context) error {
 		return err
 	}
 
-	ok := v.authorizer.AuthorizerFunction(ctx, v.authorizer.OwnerID, v.authorizer.ResourceID)
-	if !ok {
-		return exceptions.Unauthorized
+	err := v.authorizer.AuthorizerFunction(ctx, v.authorizer.OwnerID, v.authorizer.ResourceID)
+	if err != nil {
+		return err
 	}
 
 	return nil

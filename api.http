@@ -28,7 +28,9 @@ POST http://{{host}}:{{port}}/users/register
 Accept: application/json
 Content-Type: application/json
 
-{}
+{
+
+}
 
 > {%
 

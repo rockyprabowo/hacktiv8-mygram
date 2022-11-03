@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/rockyprabowo/h8-helpers/slices"
 	"github.com/spf13/viper"
-	config_keys "rocky.my.id/git/mygram/infrastructure/configurations/config/keys"
+	"rocky.my.id/git/mygram/infrastructure/configurations/config/keys"
 )
 
 // noinspection GoUnusedExportedFunction

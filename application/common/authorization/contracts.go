@@ -2,10 +2,10 @@ package authorization
 
 import "context"
 
-type ResourceOwnerAuthorizerFunc = func(ctx context.Context, ownerID, resourceID any) bool
+type ResourceOwnerAuthorizerFunc = func(ctx context.Context, ownerID, resourceID any) error
 
 type ResourceOwnerAuthorization interface {
-	Authorize(ctx context.Context, ownerID, resourceID any) bool
+	Authorize(ctx context.Context, ownerID, resourceID any) error
 }
 
 type NeedsResourceOwnerAuthorization interface {

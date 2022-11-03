@@ -1,6 +1,7 @@
 package database_commands
 
 import (
+	"context"
 	"github.com/spf13/cobra"
 	"log"
 	"rocky.my.id/git/mygram/domain/entities"
@@ -11,13 +12,19 @@ var MigrateCmd = &cobra.Command{
 	Use:   "db:migrate",
 	Short: "Run the database migrations",
 	Run: func(cmd *cobra.Command, args []string) {
-		MigrateDB()
+		MigrateDB(cmd.Context())
 	},
 }
 
-func MigrateDB() {
+func MigrateDB(ctx context.Context) {
 	db := database_connections.Init()
-	err := db.AutoMigrate(&entities.User{}, &entities.SocialMedia{}, &entities.Photo{}, &entities.Comment{})
+	err := db.WithContext(ctx).
+		AutoMigrate(
+			&entities.User{},
+			&entities.SocialMedia{},
+			&entities.Photo{},
+			&entities.Comment{},
+		)
 	if err != nil {
 		log.Fatal("Migration failed, error: " + err.Error())
 	}

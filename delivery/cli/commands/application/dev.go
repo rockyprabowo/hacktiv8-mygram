@@ -15,8 +15,8 @@ var DevCmd = &cobra.Command{
 		viper.Set(config_keys.DatabaseEngine, config.DevDatabaseEngine)
 		viper.Set(config_keys.DatabaseDSN, config.DevDatabaseDSN)
 
-		database_commands.MigrateDB()
-		database_commands.SeedDB(cmd.Context(), 100, 5)
+		database_commands.MigrateDB(cmd.Context())
+		database_commands.SeedDBDev(cmd.Context())
 		ServeApp()
 	},
 }

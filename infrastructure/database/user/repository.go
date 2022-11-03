@@ -119,7 +119,6 @@ func (r UserRepository) UpdateUser(ctx context.Context, payload payloads.UserPro
 		Key:   "ID",
 		Value: payload.ID,
 	})
-
 	if err != nil {
 		return nil, err
 	}

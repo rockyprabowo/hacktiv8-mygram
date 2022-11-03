@@ -1,5 +1,7 @@
 package exceptions
 
-import "errors"
+import (
+	"fmt"
+)
 
-var SocialMediaNotFoundError = errors.New("social media doesn't exist")
+var SocialMediaNotFoundError = fmt.Errorf("social media %w", EntityNotFound)

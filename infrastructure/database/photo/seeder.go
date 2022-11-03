@@ -29,10 +29,6 @@ func Seed(ctx context.Context, db *gorm.DB, count int, multiplier int) {
 			PhotoURL: payload.PhotoURL,
 			UserID:   payload.UserID,
 		})
-		_, err = repository.Save(ctx, payload)
-		if err != nil {
-			log.Fatal(err)
-		}
 	}
 
 	photoCount, err := repository.BatchSave(ctx, payloads)

@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 	"rocky.my.id/git/mygram/delivery/http/api/comment"
+	"rocky.my.id/git/mygram/delivery/http/api/common/middlewares"
 	"rocky.my.id/git/mygram/delivery/http/api/photo"
 	"rocky.my.id/git/mygram/delivery/http/api/social_media"
 	"rocky.my.id/git/mygram/delivery/http/api/user"
@@ -15,6 +16,8 @@ import (
 func SetupDefault(engine *echo.Echo, db *gorm.DB) {
 	jwtSecret := viper.GetString(config_keys.JWTSecret)
 	jwtService := jwt_user.NewUserJWTService([]byte(jwtSecret))
+
+	engine.Use(http_middlewares.WithCustomContext)
 
 	user_http_delivery.SetupDefault(engine, db, jwtService)
 	social_media_http_delivery.SetupDefault(engine, db, jwtService)

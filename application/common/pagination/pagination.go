@@ -5,6 +5,9 @@ import (
 	"math"
 )
 
+const defaultPaginationLimit = 25
+const maxPaginationLimit = 25
+
 type Pagination[T any] struct {
 	Data []T `json:"data"`
 	State
@@ -36,10 +39,10 @@ func (s *State) GetOffset() int {
 
 func (s *State) GetLimit() int {
 	if s.Limit == 0 {
-		s.Limit = 10
+		s.Limit = defaultPaginationLimit
 	}
-	if s.Limit > 100 {
-		s.Limit = 100
+	if s.Limit > maxPaginationLimit {
+		s.Limit = maxPaginationLimit
 	}
 	return s.Limit
 }

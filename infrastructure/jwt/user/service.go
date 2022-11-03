@@ -41,19 +41,14 @@ func (s UserJWTService) ParseUserToken(tokenString string) (any, error) {
 		return nil, err
 	}
 	if !parsedToken.Valid {
-		return nil, exceptions.AuthTokenInvalid
+		return nil, exceptions.InvalidAuthToken
 	}
 	return parsedToken, nil
-	//claims, ok := parsedToken.Claims.(*UserClaims)
-	//if err != nil && !ok && !parsedToken.Valid {
-	//	return nil, exceptions.AuthTokenInvalid
-	//}
-	//return claims, nil
 }
 
 func (s UserJWTService) keyFunc(token *jwt.Token) (any, error) {
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-		return nil, exceptions.AuthTokenInvalid
+		return nil, exceptions.InvalidAuthToken
 	}
 	return s.SecretKey, nil
 }

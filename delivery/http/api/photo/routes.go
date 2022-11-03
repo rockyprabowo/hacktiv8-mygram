@@ -2,10 +2,9 @@ package photo_http_delivery
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"rocky.my.id/git/mygram/delivery/http/api/common/contracts"
-	"rocky.my.id/git/mygram/delivery/http/api/common/helpers"
-	http_middlewares "rocky.my.id/git/mygram/delivery/http/api/common/middlewares"
+	payloads "rocky.my.id/git/mygram/application/photos/payloads"
+	contracts "rocky.my.id/git/mygram/delivery/http/api/common/contracts"
+	middlewares "rocky.my.id/git/mygram/delivery/http/api/common/middlewares"
 	"rocky.my.id/git/mygram/infrastructure/jwt/user"
 )
 
@@ -15,20 +14,50 @@ type PhotoHTTPRouter struct {
 	Handler    PhotoHTTPHandlerContract
 }
 
-func NewPhotoHTTPRouter(deps http_api_contracts.APIWithJWTRouterDeps, handler PhotoHTTPHandlerContract) *PhotoHTTPRouter {
+func NewPhotoHTTPRouter(deps contracts.APIWithJWTRouterDeps, handler PhotoHTTPHandlerContract) *PhotoHTTPRouter {
 	return &PhotoHTTPRouter{Router: deps.Engine, JWTService: deps.JWTService, Handler: handler}
 }
 
 func (r PhotoHTTPRouter) Setup() {
-	jwtMiddlewareConfig := jwt_helpers.BuildEchoJWTMiddlewareConfig(r.JWTService.ParseUserToken)
-	jwtMiddleware := middleware.JWTWithConfig(jwtMiddlewareConfig)
-
 	routeGroup := r.Router.Group("/photos")
 	{
-		routeGroup.Use(jwtMiddleware, http_middlewares.MustHaveValidToken)
-		routeGroup.GET("", r.Handler.GetPhotos)
-		routeGroup.POST("", r.Handler.PostPhoto)
-		routeGroup.PUT("/:id", r.Handler.UpdatePhoto)
-		routeGroup.DELETE("/:id", r.Handler.DeletePhoto)
+		jwtMiddlewares := middlewares.WithJWTValidation(r.JWTService.ParseUserToken)
+		routeGroup.Use(jwtMiddlewares...)
+
+		routeGroup.GET(
+			"",
+			r.Handler.GetPhotos,
+			middlewares.BindPayloadAndValidate(&payloads.PhotoGetAllPayload{}),
+		)
+
+		routeGroup.POST(
+			"",
+			r.Handler.PostPhoto,
+			middlewares.BindPayloadWithUserClaimsAndValidate(
+				func(claims *jwt_user.UserClaims, payload *payloads.PhotoInsertPayload) {
+					payload.UserID = claims.UserID
+				},
+			),
+		)
+
+		routeGroup.PUT(
+			"/:id",
+			r.Handler.UpdatePhoto,
+			middlewares.BindPayloadWithUserClaimsAndValidate(
+				func(claims *jwt_user.UserClaims, payload *payloads.PhotoUpdatePayload) {
+					payload.UserID = claims.UserID
+				},
+			),
+		)
+
+		routeGroup.DELETE(
+			"/:id",
+			r.Handler.DeletePhoto,
+			middlewares.BindPayloadWithUserClaimsAndValidate(
+				func(claims *jwt_user.UserClaims, payload *payloads.PhotoDeletePayload) {
+					payload.UserID = claims.UserID
+				},
+			),
+		)
 	}
 }

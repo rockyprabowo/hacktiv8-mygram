@@ -8,7 +8,9 @@ import (
 	"rocky.my.id/git/mygram/infrastructure/jwt/user"
 )
 
-func BuildEchoJWTMiddlewareConfig(parserFunc func(string) (any, error)) middleware.JWTConfig {
+type ParserFunc = func(string) (any, error)
+
+func BuildEchoJWTMiddlewareConfig(parserFunc ParserFunc) middleware.JWTConfig {
 	return middleware.JWTConfig{
 		ParseTokenFunc: func(auth string, c echo.Context) (any, error) {
 			return parserFunc(auth)
@@ -26,7 +28,7 @@ func MustGetUserClaims(ctx echo.Context) (*jwt_user.UserClaims, error) {
 			return claims, nil
 		}
 	}
-	return nil, exceptions.AuthTokenInvalid
+	return nil, exceptions.InvalidAuthToken
 }
 
 func ExtractUserClaims(ctx echo.Context) *jwt_user.UserClaims {

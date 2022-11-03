@@ -21,7 +21,7 @@ func NewCommentRepository(DB *gorm.DB) *CommentRepository {
 	return &CommentRepository{DB: DB}
 }
 
-func (r CommentRepository) Authorize(ctx context.Context, ownerID, resourceID any) bool {
+func (r CommentRepository) Authorize(ctx context.Context, ownerID, resourceID any) error {
 	return db_authorize.NewGormResourceOwnerAuthorizer(r.DB, &entities.Comment{}, ownerID, resourceID).Execute(ctx)
 }
 
@@ -104,7 +104,6 @@ func (r CommentRepository) GetOwnedComments(ctx context.Context, payload payload
 			scopes.OwnedBy(payload.UserID),
 			scopes.SortDescByID(),
 		).
-		//Where("user_id = ?", payload.UserID).
 		Find(&comments)
 	if results.Error != nil {
 		return nil, paginationState, results.Error
@@ -113,7 +112,6 @@ func (r CommentRepository) GetOwnedComments(ctx context.Context, payload payload
 	r.DB.WithContext(ctx).
 		Model(&entities.Comment{}).
 		Scopes(scopes.OwnedBy(payload.UserID)).
-		//Where("user_id = ?", payload.UserID).
 		Count(&totalCommentCount)
 	paginationState.SetPaginateTotalCount(totalCommentCount)
 

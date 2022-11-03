@@ -6,7 +6,7 @@ import (
 	"net/http"
 	uc "rocky.my.id/git/mygram/application/users"
 	payloads "rocky.my.id/git/mygram/application/users/payloads"
-	"rocky.my.id/git/mygram/delivery/http/api/common/helpers"
+	"rocky.my.id/git/mygram/delivery/http/api/common/helpers/jwt"
 	"rocky.my.id/git/mygram/delivery/http/api/common/responses"
 	"rocky.my.id/git/mygram/domain/exceptions"
 )
@@ -27,22 +27,14 @@ func (h UserHTTPHandler) GetUser(ctx echo.Context) error {
 		if errors.Is(err, exceptions.UserNotFoundError) {
 			return responses.EchoErrorResponse(http.StatusNotFound, err.Error())
 		}
-		return responses.EchoErrorResponse(http.StatusInternalServerError, err.Error())
+		return responses.EchoErrorResponse(http.StatusUnprocessableEntity, err.Error())
 	}
 
 	return ctx.JSON(http.StatusOK, user)
 }
 
 func (h UserHTTPHandler) Login(ctx echo.Context) error {
-	var payload payloads.UserLoginPayload
-
-	if bindErr := ctx.Bind(&payload); bindErr != nil {
-		return responses.EchoErrorResponse(http.StatusBadRequest, bindErr.Error())
-	}
-
-	if validationErr := payload.Validate(); validationErr != nil {
-		return responses.EchoErrorResponse(http.StatusBadRequest, validationErr)
-	}
+	payload := *ctx.Get("payload").(*payloads.UserLoginPayload)
 
 	_, token, err := h.UseCases.Queries.AuthenticateUser(ctx.Request().Context(), payload)
 	if err != nil {
@@ -53,15 +45,7 @@ func (h UserHTTPHandler) Login(ctx echo.Context) error {
 }
 
 func (h UserHTTPHandler) Register(ctx echo.Context) error {
-	var payload payloads.UserRegisterPayload
-
-	if bindErr := ctx.Bind(&payload); bindErr != nil {
-		return responses.EchoErrorResponse(http.StatusBadRequest, bindErr.Error())
-	}
-
-	if validationErr := payload.Validate(); validationErr != nil {
-		return responses.EchoErrorResponse(http.StatusBadRequest, validationErr)
-	}
+	payload := *ctx.Get("payload").(*payloads.UserRegisterPayload)
 
 	newUser, err := h.UseCases.Commands.RegisterUser(ctx.Request().Context(), payload)
 	if err != nil {
@@ -72,15 +56,7 @@ func (h UserHTTPHandler) Register(ctx echo.Context) error {
 }
 
 func (h UserHTTPHandler) UpdateUser(ctx echo.Context) error {
-	var payload payloads.UserProfileUpdatePayload
-
-	if bindErr := ctx.Bind(&payload); bindErr != nil {
-		return responses.EchoErrorResponse(http.StatusBadRequest, bindErr.Error())
-	}
-
-	if validationErr := payload.Validate(); validationErr != nil {
-		return responses.EchoErrorResponse(http.StatusBadRequest, validationErr)
-	}
+	payload := *ctx.Get("payload").(*payloads.UserProfileUpdatePayload)
 
 	updatedUser, err := h.UseCases.Commands.UpdateUser(ctx.Request().Context(), payload)
 	if err != nil {
@@ -91,15 +67,7 @@ func (h UserHTTPHandler) UpdateUser(ctx echo.Context) error {
 }
 
 func (h UserHTTPHandler) DeleteUser(ctx echo.Context) error {
-	var payload payloads.UserDeletePayload
-
-	if bindErr := ctx.Bind(&payload); bindErr != nil {
-		return responses.EchoErrorResponse(http.StatusBadRequest, bindErr.Error())
-	}
-
-	if validationErr := payload.Validate(); validationErr != nil {
-		return responses.EchoErrorResponse(http.StatusBadRequest, validationErr)
-	}
+	payload := *ctx.Get("payload").(*payloads.UserDeletePayload)
 
 	deleted, err := h.UseCases.Commands.DeleteUser(ctx.Request().Context(), payload)
 	if !deleted || err != nil {

@@ -1,5 +1,7 @@
 package exceptions
 
-import "errors"
+import (
+	"fmt"
+)
 
-var CommentNotFoundError = errors.New("comment doesn't exist")
+var CommentNotFoundError = fmt.Errorf("comment %w", EntityNotFound)

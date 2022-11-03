@@ -19,7 +19,7 @@ func NewSocialMediaRepository(DB *gorm.DB) *SocialMediaRepository {
 	return &SocialMediaRepository{DB: DB}
 }
 
-func (r SocialMediaRepository) Authorize(ctx context.Context, ownerID, resourceID any) bool {
+func (r SocialMediaRepository) Authorize(ctx context.Context, ownerID, resourceID any) error {
 	return db_authorize.NewGormResourceOwnerAuthorizer(r.DB, &entities.SocialMedia{}, ownerID, resourceID).Execute(ctx)
 }
 

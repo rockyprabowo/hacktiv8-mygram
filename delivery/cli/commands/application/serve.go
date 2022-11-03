@@ -29,7 +29,6 @@ var ServeCmd = &cobra.Command{
 	Short: "Serve the application",
 	Run: func(cmd *cobra.Command, args []string) {
 		ServeApp()
-		os.Exit(0)
 	},
 }
 

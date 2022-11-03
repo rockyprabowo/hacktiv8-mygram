@@ -2,7 +2,7 @@
 
 ## Roadmap
 - [x] Rewrite and reorganize codebase from classic MVC application architecture to Clean Architecture-inspired architecture
-- [ ] Finish feature rewrites on Delivery layer
+- [x] Finish feature rewrites on Delivery layer
 - [ ] Swagger/OpenAPI documentations with swaggo
 
 ## Post Course Roadmap
