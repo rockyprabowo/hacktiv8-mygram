@@ -7,5 +7,5 @@ import (
 )
 
 type SocialMediaQueriesContract interface {
-	GetAll(ctx context.Context, payload payloads.SocialMediaGetAllByOwnerPayload) ([]dto.SocialMediaWithUserDTO, error)
+	GetOwnedSocialMedia(ctx context.Context, payload payloads.SocialMediaGetAllByOwnerPayload) ([]dto.SocialMediaWithUserDTO, error)
 }

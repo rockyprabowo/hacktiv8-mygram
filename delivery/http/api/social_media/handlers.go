@@ -5,7 +5,7 @@ import (
 	"net/http"
 	uc "rocky.my.id/git/mygram/application/social_medias"
 	payloads "rocky.my.id/git/mygram/application/social_medias/payloads"
-	errorHelpers "rocky.my.id/git/mygram/delivery/http/api/common/helpers/errors"
+	"rocky.my.id/git/mygram/delivery/http/api/common/consts"
 	"rocky.my.id/git/mygram/delivery/http/api/common/responses"
 )
 
@@ -18,47 +18,51 @@ func NewSocialMediaHTTPHandler(useCases *uc.SocialMediaUseCases) *SocialMediaHTT
 }
 
 func (h SocialMediaHTTPHandler) GetUserSocialMedias(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.SocialMediaGetAllByOwnerPayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.SocialMediaGetAllByOwnerPayload)
 
-	socialMedias, err := h.UseCases.Queries.GetAll(ctx.Request().Context(), payload)
+	socialMedias, err := h.UseCases.Queries.GetOwnedSocialMedia(ctx.Request().Context(), payload)
 	if err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 
 	}
+
 	return ctx.JSON(http.StatusOK, SocialMediaCollectionResponse{socialMedias})
 }
 
 func (h SocialMediaHTTPHandler) CreateUserSocialMedia(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.SocialMediaInsertPayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.SocialMediaInsertPayload)
 
 	socialMedia, err := h.UseCases.Commands.Save(ctx.Request().Context(), payload)
 	if err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 
 	}
 	socialMedia.DateTime.OmitUpdatedAt()
+
 	return ctx.JSON(http.StatusOK, socialMedia)
 }
 
 func (h SocialMediaHTTPHandler) UpdateUserSocialMedia(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.SocialMediaUpdatePayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.SocialMediaUpdatePayload)
 
 	socialMedia, err := h.UseCases.Commands.Update(ctx.Request().Context(), payload)
 	if err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 
 	}
 	socialMedia.DateTime.OmitCreatedAt()
+
 	return ctx.JSON(http.StatusOK, socialMedia)
 }
 
 func (h SocialMediaHTTPHandler) DeleteUserSocialMedia(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.SocialMediaDeletePayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.SocialMediaDeletePayload)
 
 	deleted, err := h.UseCases.Commands.Delete(ctx.Request().Context(), payload)
 	if !deleted || err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 
 	}
-	return ctx.JSON(http.StatusOK, responses.InfoResult{Message: DeleteSuccessMessage})
+
+	return responses.WithDeleteSuccess(ctx, "comment")
 }

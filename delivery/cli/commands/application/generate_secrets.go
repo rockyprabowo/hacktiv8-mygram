@@ -41,6 +41,7 @@ func assertAvailablePRNG() {
 }
 
 func GenerateRandomString(n int) (string, error) {
+	//noinspection SpellCheckingInspection
 	const letters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-"
 	ret := make([]byte, n)
 	for i := 0; i < n; i++ {

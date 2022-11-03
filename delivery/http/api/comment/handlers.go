@@ -2,10 +2,9 @@ package comment_http_delivery
 
 import (
 	"github.com/labstack/echo/v4"
-	"net/http"
 	uc "rocky.my.id/git/mygram/application/comments"
 	payloads "rocky.my.id/git/mygram/application/comments/payloads"
-	errorHelpers "rocky.my.id/git/mygram/delivery/http/api/common/helpers/errors"
+	"rocky.my.id/git/mygram/delivery/http/api/common/consts"
 	"rocky.my.id/git/mygram/delivery/http/api/common/responses"
 )
 
@@ -18,66 +17,66 @@ func NewCommentHTTPHandler(useCases *uc.CommentUseCases) *CommentHTTPHandler {
 }
 
 func (h CommentHTTPHandler) PostComment(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.CommentInsertPayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.CommentInsertPayload)
 
 	comment, err := h.UseCases.Commands.Save(ctx.Request().Context(), payload)
 	if err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 	}
 	comment.DateTime.OmitUpdatedAt()
 
-	return ctx.JSON(http.StatusOK, comment)
+	return responses.WithData(ctx, comment)
 }
 
 func (h CommentHTTPHandler) GetComments(ctx echo.Context) error {
-	payload := ctx.Get("payload").(*payloads.CommentGetAllPayload)
+	payload := ctx.Get(consts.Payload).(*payloads.CommentGetAllPayload)
 
 	comments, err := h.UseCases.Queries.GetAll(ctx.Request().Context(), *payload)
 	if err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 	}
-	return ctx.JSON(http.StatusOK, comments)
+	return responses.WithData(ctx, comments)
 }
 
 func (h CommentHTTPHandler) GetOwnedComments(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.CommentGetByOwnerPayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.CommentGetByOwnerPayload)
 
 	comments, err := h.UseCases.Queries.GetOwnedComments(ctx.Request().Context(), payload)
 	if err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 	}
-	return ctx.JSON(http.StatusOK, comments)
+	return responses.WithData(ctx, comments)
 }
 
 func (h CommentHTTPHandler) GetOwnedPhotosComments(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.CommentGetByOwnerPayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.CommentGetByOwnerPayload)
 
-	comments, err := h.UseCases.Queries.GetOwnedPhotosComments(ctx.Request().Context(), payload)
+	comments, err := h.UseCases.Queries.GetOwnedPhotoComments(ctx.Request().Context(), payload)
 	if err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 	}
-	return ctx.JSON(http.StatusOK, comments)
+	return responses.WithData(ctx, comments)
 }
 
 func (h CommentHTTPHandler) UpdateComment(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.CommentUpdatePayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.CommentUpdatePayload)
 
 	comment, err := h.UseCases.Commands.Update(ctx.Request().Context(), payload)
 	if err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 	}
 	comment.DateTime.OmitCreatedAt()
 
-	return ctx.JSON(http.StatusOK, comment)
+	return responses.WithData(ctx, comment)
 }
 
 func (h CommentHTTPHandler) DeleteComment(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.CommentDeletePayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.CommentDeletePayload)
 
 	deleted, err := h.UseCases.Commands.Delete(ctx.Request().Context(), payload)
 	if !deleted || err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 	}
 
-	return ctx.JSON(http.StatusOK, responses.InfoResult{Message: DeleteSuccessMessage})
+	return responses.WithDeleteSuccess(ctx, "comment")
 }

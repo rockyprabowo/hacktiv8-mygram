@@ -9,6 +9,6 @@ import (
 type CommentQueriesContract interface {
 	GetByID(ctx context.Context, payload payloads.CommentGetByIDPayload) (*dto.CommentWithRelationsDTO, error)
 	GetAll(ctx context.Context, payload payloads.CommentGetAllPayload) (*dto.PaginatedCommentWithRelationsDTO, error)
-	GetOwnedPhotosComments(ctx context.Context, payload payloads.CommentGetByOwnerPayload) (*dto.PaginatedCommentWithRelationsDTO, error)
+	GetOwnedPhotoComments(ctx context.Context, payload payloads.CommentGetByOwnerPayload) (*dto.PaginatedCommentWithRelationsDTO, error)
 	GetOwnedComments(ctx context.Context, payload payloads.CommentGetByOwnerPayload) (*dto.PaginatedCommentWithRelationsDTO, error)
 }

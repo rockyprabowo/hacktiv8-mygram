@@ -6,6 +6,7 @@ import (
 	"net/http"
 	uc "rocky.my.id/git/mygram/application/users"
 	payloads "rocky.my.id/git/mygram/application/users/payloads"
+	"rocky.my.id/git/mygram/delivery/http/api/common/consts"
 	"rocky.my.id/git/mygram/delivery/http/api/common/helpers/jwt"
 	"rocky.my.id/git/mygram/delivery/http/api/common/responses"
 	"rocky.my.id/git/mygram/domain/exceptions"
@@ -34,7 +35,7 @@ func (h UserHTTPHandler) GetUser(ctx echo.Context) error {
 }
 
 func (h UserHTTPHandler) Login(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.UserLoginPayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.UserLoginPayload)
 
 	_, token, err := h.UseCases.Queries.AuthenticateUser(ctx.Request().Context(), payload)
 	if err != nil {
@@ -45,34 +46,36 @@ func (h UserHTTPHandler) Login(ctx echo.Context) error {
 }
 
 func (h UserHTTPHandler) Register(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.UserRegisterPayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.UserRegisterPayload)
 
 	newUser, err := h.UseCases.Commands.RegisterUser(ctx.Request().Context(), payload)
 	if err != nil {
 		return responses.EchoErrorResponse(http.StatusUnprocessableEntity, err.Error())
 	}
 	newUser.DateTime.Omit()
+
 	return ctx.JSON(http.StatusOK, newUser)
 }
 
 func (h UserHTTPHandler) UpdateUser(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.UserProfileUpdatePayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.UserProfileUpdatePayload)
 
 	updatedUser, err := h.UseCases.Commands.UpdateUser(ctx.Request().Context(), payload)
 	if err != nil {
 		return responses.EchoErrorResponse(http.StatusUnprocessableEntity, err.Error())
 	}
 	updatedUser.DateTime.OmitCreatedAt()
+
 	return ctx.JSON(http.StatusOK, updatedUser)
 }
 
 func (h UserHTTPHandler) DeleteUser(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.UserDeletePayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.UserDeletePayload)
 
 	deleted, err := h.UseCases.Commands.DeleteUser(ctx.Request().Context(), payload)
 	if !deleted || err != nil {
 		return responses.EchoErrorResponse(http.StatusUnprocessableEntity, err.Error())
 	}
 
-	return ctx.JSON(http.StatusOK, responses.InfoResult{Message: DeleteSuccessMessage})
+	return responses.WithDeleteSuccess(ctx, "comment")
 }

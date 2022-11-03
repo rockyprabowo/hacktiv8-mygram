@@ -5,7 +5,7 @@ import (
 	"net/http"
 	uc "rocky.my.id/git/mygram/application/photos"
 	payloads "rocky.my.id/git/mygram/application/photos/payloads"
-	errorHelpers "rocky.my.id/git/mygram/delivery/http/api/common/helpers/errors"
+	"rocky.my.id/git/mygram/delivery/http/api/common/consts"
 	"rocky.my.id/git/mygram/delivery/http/api/common/responses"
 )
 
@@ -18,32 +18,33 @@ func NewPhotoHTTPHandler(useCases *uc.PhotoUseCases) *PhotoHTTPHandler {
 }
 
 func (h PhotoHTTPHandler) PostPhoto(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.PhotoInsertPayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.PhotoInsertPayload)
 
 	photo, err := h.UseCases.Commands.Save(ctx.Request().Context(), payload)
 	if err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 	}
 	photo.DateTime.OmitUpdatedAt()
 
 	return ctx.JSON(http.StatusOK, photo)
 }
 func (h PhotoHTTPHandler) GetPhotos(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.PhotoGetAllPayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.PhotoGetAllPayload)
 
 	photos, err := h.UseCases.Queries.GetAll(ctx.Request().Context(), payload)
 	if err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 	}
+
 	return ctx.JSON(http.StatusOK, photos)
 }
 
 func (h PhotoHTTPHandler) UpdatePhoto(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.PhotoUpdatePayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.PhotoUpdatePayload)
 
 	photo, err := h.UseCases.Commands.Update(ctx.Request().Context(), payload)
 	if err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 	}
 	photo.DateTime.OmitCreatedAt()
 
@@ -51,11 +52,12 @@ func (h PhotoHTTPHandler) UpdatePhoto(ctx echo.Context) error {
 }
 
 func (h PhotoHTTPHandler) DeletePhoto(ctx echo.Context) error {
-	payload := *ctx.Get("payload").(*payloads.PhotoDeletePayload)
+	payload := *ctx.Get(consts.Payload).(*payloads.PhotoDeletePayload)
 
 	deleted, err := h.UseCases.Commands.Delete(ctx.Request().Context(), payload)
 	if !deleted || err != nil {
-		return errorHelpers.ExtractError(err)
+		return responses.WithError(err)
 	}
-	return ctx.JSON(http.StatusOK, responses.InfoResult{Message: DeleteSuccessMessage})
+
+	return responses.WithDeleteSuccess(ctx, "comment")
 }

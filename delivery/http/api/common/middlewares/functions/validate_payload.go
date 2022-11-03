@@ -1,4 +1,4 @@
-package http_middlewares
+package middleware_funcs
 
 import (
 	"github.com/jellydator/validation"
