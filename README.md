@@ -6,13 +6,14 @@
 - [ ] Swagger/OpenAPI documentations with swaggo
 
 ## Post Course Roadmap
+- [ ] Thorough testing and benchmarking
 - [ ] Fully REST-ful API
 - [ ] Actual image/video upload support
 - [ ] Implement data caching technique
 - [ ] Break down features into multiple services
-- [ ] Service communicates via message broker 
+- [ ] Services mentioned above communicates via message broker 
 - [ ] Complete CLI frontends for application management
-- [ ] Complete frontend with modern tech stacks
+- [ ] Complete frontend with modern frontend technology stack
 
 ## Endpoints
 TODO: Implement swaggo documentation first.
@@ -21,7 +22,7 @@ TODO: Implement swaggo documentation first.
 * Echo (github.com/labstack/echo/v4)
 * Cobra (github.com/spf13/cobra)
 * Viper (github.com/spf13/viper)
-* jwt-go (golang-jwt/jwt/v4)
 * Gorm (gorm.io/gorm)
-* go-ozzo/validate (github.com/jellydator/validate fork)
+* jwt-go (golang-jwt/jwt/v4)
+* go-ozzo/validate (uses github.com/jellydator/validate fork)
 * Zap (go.uber.org/zap)
