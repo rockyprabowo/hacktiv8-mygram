@@ -5,8 +5,8 @@ import (
 	"math"
 )
 
-const defaultPaginationLimit = 25
-const maxPaginationLimit = 25
+const defaultPaginationLimit = 10
+const maxPaginationLimit = 100
 
 type Pagination[T any] struct {
 	Data []T `json:"data"`
