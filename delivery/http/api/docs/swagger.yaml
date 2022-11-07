@@ -1,0 +1,999 @@
+definitions:
+  authentication_dto.AuthTokenDTO:
+    properties:
+      token:
+        type: string
+    type: object
+  comment_dto.CommentDTO:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+      photo_id:
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  comment_dto.CommentWithRelationsDTO:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+      photo:
+        $ref: '#/definitions/comment_dto.PhotoExcerpt'
+      photo_id:
+        type: integer
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/comment_dto.UserExcerpt'
+      user_id:
+        type: integer
+    type: object
+  comment_dto.PaginatedCommentWithRelationsDTO:
+    properties:
+      count:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/comment_dto.CommentWithRelationsDTO'
+        type: array
+      limit:
+        type: integer
+      page:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  comment_dto.PhotoExcerpt:
+    properties:
+      caption:
+        type: string
+      id:
+        type: integer
+      photo_url:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  comment_dto.UserExcerpt:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+  comment_payloads.CommentDeletePayload:
+    properties:
+      id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  comment_payloads.CommentInsertPayload:
+    properties:
+      message:
+        type: string
+      photo_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  comment_payloads.CommentUpdatePayload:
+    properties:
+      id:
+        type: integer
+      message:
+        type: string
+      photo_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  photo_dto.PaginatedPhotoWithUserDTO:
+    properties:
+      count:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/photo_dto.PhotoWithUserDTO'
+        type: array
+      limit:
+        type: integer
+      page:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  photo_dto.PhotoDTO:
+    properties:
+      caption:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      photo_url:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  photo_dto.PhotoWithUserDTO:
+    properties:
+      caption:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      photo_url:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/photo_dto.UserExcerpt'
+      user_id:
+        type: integer
+    type: object
+  photo_dto.UserExcerpt:
+    properties:
+      email:
+        type: string
+      username:
+        type: string
+    type: object
+  photo_payloads.PhotoDeletePayload:
+    properties:
+      id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  photo_payloads.PhotoInsertPayload:
+    properties:
+      caption:
+        type: string
+      photo_url:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  photo_payloads.PhotoUpdatePayload:
+    properties:
+      caption:
+        type: string
+      id:
+        type: integer
+      photo_url:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  responses.ErrorResult:
+    properties:
+      code:
+        type: integer
+      error: {}
+    type: object
+  responses.InfoResult:
+    properties:
+      message:
+        type: string
+    type: object
+  social_media_dto.SocialMediaDTO:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      social_media_url:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  social_media_dto.SocialMediaWithUserDTO:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      social_media_url:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/user_dto.UserDTO'
+      user_id:
+        type: integer
+    type: object
+  social_media_handlers.SocialMediaCollectionResponse:
+    properties:
+      social_medias:
+        items:
+          $ref: '#/definitions/social_media_dto.SocialMediaWithUserDTO'
+        type: array
+    type: object
+  social_media_payloads.SocialMediaDeletePayload:
+    properties:
+      id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  social_media_payloads.SocialMediaInsertPayload:
+    properties:
+      name:
+        type: string
+      social_media_url:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  social_media_payloads.SocialMediaUpdatePayload:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      social_media_url:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  user_dto.UserDTO:
+    properties:
+      age:
+        type: integer
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  user_payloads.UserDeletePayload:
+    properties:
+      id:
+        type: integer
+    type: object
+  user_payloads.UserLoginPayload:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  user_payloads.UserProfileUpdatePayload:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+  user_payloads.UserRegisterPayload:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact:
+    email: rocky@lazycats.id
+    name: API Support
+    url: https://rocky.my.id/
+  description: This is a REST API for MyGram.
+  title: MyGram
+  version: "1.0"
+paths:
+  /comments:
+    get:
+      consumes:
+      - application/json
+      description: Get all comments
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comment_dto.PaginatedCommentWithRelationsDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get comments
+      tags:
+      - comments
+    post:
+      consumes:
+      - application/json
+      description: Creates a new comment on a photo.
+      parameters:
+      - description: Create Comment Request
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/comment_payloads.CommentInsertPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comment_dto.CommentDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Post comment
+      tags:
+      - comments
+  /comments/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a comment with the given ID.
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Delete Comment Request
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/comment_payloads.CommentDeletePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comment_dto.CommentDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete comment
+      tags:
+      - comments
+    put:
+      consumes:
+      - application/json
+      description: Updates a comment with the given ID.
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Comment Request
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/comment_payloads.CommentUpdatePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comment_dto.CommentDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update comment
+      tags:
+      - comments
+  /me/comments:
+    get:
+      consumes:
+      - application/json
+      description: Get all comments owned by user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comment_dto.PaginatedCommentWithRelationsDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get comments owned by user.
+      tags:
+      - comments
+  /me/photos:
+    get:
+      consumes:
+      - application/json
+      description: Get all photos
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/photo_dto.PaginatedPhotoWithUserDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get photos owned by user.
+      tags:
+      - photos
+  /me/photos/comments:
+    get:
+      consumes:
+      - application/json
+      description: Get all comments on photos owned by user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comment_dto.PaginatedCommentWithRelationsDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get comments on photos owned by user.
+      tags:
+      - comments
+  /photos:
+    get:
+      consumes:
+      - application/json
+      description: Get all photos
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/photo_dto.PaginatedPhotoWithUserDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get photos
+      tags:
+      - photos
+    post:
+      consumes:
+      - application/json
+      description: Creates a new photo on a photo.
+      parameters:
+      - description: Create Photo Request
+        in: body
+        name: photo
+        required: true
+        schema:
+          $ref: '#/definitions/photo_payloads.PhotoInsertPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/photo_dto.PhotoDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Post photo
+      tags:
+      - photos
+  /photos/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a photo with the given ID.
+      parameters:
+      - description: Photo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Delete Photo Request
+        in: body
+        name: photo
+        required: true
+        schema:
+          $ref: '#/definitions/photo_payloads.PhotoDeletePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.InfoResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete photo
+      tags:
+      - photos
+    get:
+      description: Get a photo by its ID from the database.
+      parameters:
+      - description: Photo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/photo_dto.PhotoDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      summary: Get single photo
+      tags:
+      - photos
+    put:
+      consumes:
+      - application/json
+      description: Updates a photo with the given ID.
+      parameters:
+      - description: Photo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Photo Request
+        in: body
+        name: photo
+        required: true
+        schema:
+          $ref: '#/definitions/photo_payloads.PhotoUpdatePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/photo_dto.PhotoDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update photo
+      tags:
+      - photos
+  /socialmedias:
+    get:
+      consumes:
+      - application/json
+      description: Get user's social media
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/social_media_handlers.SocialMediaCollectionResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user's social media
+      tags:
+      - social_media
+    post:
+      consumes:
+      - application/json
+      description: Creates a new social media of a user.
+      parameters:
+      - description: Create SocialMedia Request
+        in: body
+        name: social_media
+        required: true
+        schema:
+          $ref: '#/definitions/social_media_payloads.SocialMediaInsertPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/social_media_dto.SocialMediaDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Create social media.
+      tags:
+      - social_media
+  /socialmedias/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a social media with the given ID.
+      parameters:
+      - description: Social Media ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Delete Social Media Request
+        in: body
+        name: social_media
+        required: true
+        schema:
+          $ref: '#/definitions/social_media_payloads.SocialMediaDeletePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.InfoResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete social media
+      tags:
+      - social_media
+    put:
+      consumes:
+      - application/json
+      description: Updates a social media with the given ID.
+      parameters:
+      - description: Social Media ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Social Media Request
+        in: body
+        name: social_media
+        required: true
+        schema:
+          $ref: '#/definitions/social_media_payloads.SocialMediaUpdatePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/social_media_dto.SocialMediaDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update social media
+      tags:
+      - social_media
+  /users:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes current user.
+      parameters:
+      - description: Delete User Request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/user_payloads.UserDeletePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.InfoResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete user
+      tags:
+      - user
+    get:
+      consumes:
+      - application/json
+      description: Get current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dto.UserDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Get current user
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: Updates current user.
+      parameters:
+      - description: Update User Request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/user_payloads.UserProfileUpdatePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dto.UserDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: Update user
+      tags:
+      - user
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Login user
+      parameters:
+      - description: User Login Request
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/user_payloads.UserLoginPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/authentication_dto.AuthTokenDTO'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      summary: Login user
+      tags:
+      - user
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Registers new user
+      parameters:
+      - description: User Register Request
+        in: body
+        name: register
+        required: true
+        schema:
+          $ref: '#/definitions/user_payloads.UserRegisterPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/authentication_dto.AuthTokenDTO'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.ErrorResult'
+      summary: Register new user
+      tags:
+      - user
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -14,6 +14,8 @@ import (
 // Init initialise the database connection.
 func Init() (db *gorm.DB) {
 	var (
+		dsn            string
+		err            error
 		dialector      gorm.Dialector
 		databaseEngine = viper.GetString(config_keys.DatabaseEngine)
 	)
@@ -22,13 +24,13 @@ func Init() (db *gorm.DB) {
 	case "postgresql":
 		fallthrough
 	case "postgres":
-		dsn, err := PostgresConfig()
+		dsn, err = PostgresConfig()
 		if err != nil {
 			log.Fatal("PostgreSQL configuration error: " + err.Error())
 		}
 		dialector = postgres.Open(dsn)
 	case "sqlite":
-		dsn, err := SQLiteConfig()
+		dsn, err = SQLiteConfig()
 		if err != nil {
 			log.Fatal("SQLite configuration error: " + err.Error())
 		}
@@ -36,7 +38,7 @@ func Init() (db *gorm.DB) {
 	case "mysql":
 		fallthrough
 	case "mariadb":
-		dsn, err := MySQLConfig()
+		dsn, err = MySQLConfig()
 		if err != nil {
 			log.Fatal("MySQL/MariaDB configuration error: " + err.Error())
 		}
@@ -45,8 +47,8 @@ func Init() (db *gorm.DB) {
 		log.Fatal("Database engine is not supported: " + databaseEngine)
 	}
 
-	db, err := gorm.Open(dialector)
-	if err != nil {
+	db, connectionErr := gorm.Open(dialector)
+	if connectionErr != nil {
 		log.Fatal("Failed to connect to database!")
 	}
 

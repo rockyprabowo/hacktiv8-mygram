@@ -1,0 +1,11 @@
+base_url: ""
+bcrypt_cost: 4
+database:
+    dsn: file::memory:?cache=shared
+    engine: sqlite
+debug: false
+environment: production
+host:
+    address: ""
+    port: "8005"
+jwt_secret: '!PLEASE-CHANGE!'

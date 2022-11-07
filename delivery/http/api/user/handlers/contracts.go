@@ -1,4 +1,4 @@
-package user_http_delivery
+package user_handlers
 
 import "github.com/labstack/echo/v4"
 

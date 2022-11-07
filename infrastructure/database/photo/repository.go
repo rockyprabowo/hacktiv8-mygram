@@ -22,12 +22,12 @@ func NewPhotoRepository(DB *gorm.DB) *PhotoRepository {
 
 func (r PhotoRepository) Authorize(ctx context.Context, ownerID, resourceID any) error {
 	return db_authorize.NewGormResourceOwnerAuthorizer(r.DB, &entities.Photo{}, ownerID, resourceID).Execute(ctx)
-
 }
 
 func (r PhotoRepository) GetByID(ctx context.Context, payload payloads.PhotoGetByIDPayload) (*entities.Photo, error) {
 	photo := entities.Photo{}
-	err := r.DB.WithContext(ctx).First(&photo, payload.ID).Error
+	err := r.DB.WithContext(ctx).Preload("User").
+		First(&photo, payload.ID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, exceptions.PhotoNotFoundError
 	}

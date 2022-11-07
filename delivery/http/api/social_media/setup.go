@@ -7,6 +7,7 @@ import (
 	commands "rocky.my.id/git/mygram/application/social_medias/commands"
 	queries "rocky.my.id/git/mygram/application/social_medias/queries"
 	"rocky.my.id/git/mygram/delivery/http/api/common/contracts"
+	"rocky.my.id/git/mygram/delivery/http/api/social_media/handlers"
 	"rocky.my.id/git/mygram/infrastructure/database/social_media"
 	"rocky.my.id/git/mygram/infrastructure/jwt/user"
 )
@@ -18,7 +19,7 @@ type SocialMediaHTTPDeliveryDeps struct {
 
 func Setup(deps SocialMediaHTTPDeliveryDeps) {
 	var (
-		HTTPHandler = NewSocialMediaHTTPHandler(deps.UseCases)
+		HTTPHandler = social_media_handlers.NewSocialMediaHTTPHandler(deps.UseCases)
 		router      = NewSocialMediaHTTPRouter(deps.APIWithJWTRouterDeps, HTTPHandler)
 	)
 	router.Setup()

@@ -1,4 +1,4 @@
-package comment_http_delivery
+package comment_handlers
 
 import "github.com/labstack/echo/v4"
 

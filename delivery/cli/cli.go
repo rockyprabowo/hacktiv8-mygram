@@ -15,6 +15,20 @@ func Execute() {
 	commands.RootCmd.AddCommand(application.ServeCmd)
 	commands.RootCmd.AddCommand(database.MigrateCmd)
 	commands.RootCmd.AddCommand(database.SeedCmd)
+	database.SeedCmd.Flags().IntVarP(
+		&database.DBSeedCount,
+		"count",
+		"c",
+		20,
+		"Count, affects user generation.",
+	)
+	database.SeedCmd.Flags().IntVarP(
+		&database.DBSeedMultiplier,
+		"multiplier",
+		"m",
+		5,
+		"Count multiplier, affects social media, photo and comments generation.",
+	)
 
 	if err := commands.RootCmd.Execute(); err != nil {
 		log.Fatal(err)

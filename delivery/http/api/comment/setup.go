@@ -6,6 +6,7 @@ import (
 	uc "rocky.my.id/git/mygram/application/comments"
 	commands "rocky.my.id/git/mygram/application/comments/commands"
 	queries "rocky.my.id/git/mygram/application/comments/queries"
+	"rocky.my.id/git/mygram/delivery/http/api/comment/handlers"
 	"rocky.my.id/git/mygram/delivery/http/api/common/contracts"
 	"rocky.my.id/git/mygram/infrastructure/database/comment"
 	"rocky.my.id/git/mygram/infrastructure/jwt/user"
@@ -18,7 +19,7 @@ type CommentHTTPDeliveryDeps struct {
 
 func Setup(deps CommentHTTPDeliveryDeps) {
 	var (
-		HTTPHandler = NewCommentHTTPHandler(deps.UseCases)
+		HTTPHandler = comment_handlers.NewCommentHTTPHandler(deps.UseCases)
 		router      = NewCommentHTTPRouter(deps.APIWithJWTRouterDeps, HTTPHandler)
 	)
 	router.Setup()

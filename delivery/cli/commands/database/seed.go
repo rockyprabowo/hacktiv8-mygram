@@ -13,33 +13,19 @@ import (
 	"rocky.my.id/git/mygram/infrastructure/database/user"
 )
 
+var DBSeedCount int
+var DBSeedMultiplier int
+
 var SeedCmd = &cobra.Command{
 	Use:   "db:seed",
 	Short: "Run the database seeder. Only works in development environment.",
 	Run: func(cmd *cobra.Command, args []string) {
-		var count, multiplier int
-
-		cmd.Flags().IntVarP(
-			&count,
-			"count",
-			"c",
-			20,
-			"Count, affects user generation.",
-		)
-		cmd.Flags().IntVarP(
-			&multiplier,
-			"multiplier",
-			"m",
-			5,
-			"Count multiplier, affects social media, photo and comments generation.",
-		)
-
 		if config.IsInProduction() {
 			fmt.Println("RUNNING IN PRODUCTION! Exiting...")
 			return
 		}
 
-		SeedDB(cmd.Context(), count, multiplier)
+		SeedDB(cmd.Context(), DBSeedCount, DBSeedMultiplier)
 	},
 }
 

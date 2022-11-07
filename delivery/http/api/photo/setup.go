@@ -7,6 +7,7 @@ import (
 	commands "rocky.my.id/git/mygram/application/photos/commands"
 	queries "rocky.my.id/git/mygram/application/photos/queries"
 	"rocky.my.id/git/mygram/delivery/http/api/common/contracts"
+	"rocky.my.id/git/mygram/delivery/http/api/photo/handlers"
 	"rocky.my.id/git/mygram/infrastructure/database/photo"
 	"rocky.my.id/git/mygram/infrastructure/jwt/user"
 )
@@ -18,7 +19,7 @@ type PhotoHTTPDeliveryDeps struct {
 
 func Setup(deps PhotoHTTPDeliveryDeps) {
 	var (
-		HTTPHandler = NewPhotoHTTPHandler(deps.UseCases)
+		HTTPHandler = photo_handlers.NewPhotoHTTPHandler(deps.UseCases)
 		router      = NewPhotoHTTPRouter(deps.APIWithJWTRouterDeps, HTTPHandler)
 	)
 	router.Setup()

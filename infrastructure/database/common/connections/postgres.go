@@ -85,12 +85,12 @@ func buildDSN(config PostgresDBConfigMap) (string, error) {
 
 	for _, v := range fields {
 		value, exist := config[v]
-		{
-			if !exist || value != "" {
-				return "", errors.New("Mandatory database configuration " + v + " is missing!")
-			}
-			sb.WriteString(v + "=" + value + " ")
+
+		if !exist || value == "" {
+			return "", errors.New("Mandatory database configuration " + v + " is missing!")
 		}
+		sb.WriteString(v + "=" + value + " ")
+
 	}
 
 	return strings.Trim(sb.String(), " "), nil

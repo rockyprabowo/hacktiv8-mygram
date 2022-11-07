@@ -1,4 +1,4 @@
-package social_media_http_delivery
+package social_media_handlers
 
 import "github.com/labstack/echo/v4"
 

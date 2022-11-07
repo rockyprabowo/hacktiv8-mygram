@@ -7,6 +7,7 @@ import (
 	commands "rocky.my.id/git/mygram/application/users/commands"
 	queries "rocky.my.id/git/mygram/application/users/queries"
 	"rocky.my.id/git/mygram/delivery/http/api/common/contracts"
+	"rocky.my.id/git/mygram/delivery/http/api/user/handlers"
 	"rocky.my.id/git/mygram/infrastructure/database/user"
 	"rocky.my.id/git/mygram/infrastructure/jwt/user"
 )
@@ -18,7 +19,7 @@ type UserHTTPDeliveryDeps struct {
 
 func Setup(deps UserHTTPDeliveryDeps) {
 	var (
-		HTTPHandler = NewUserHTTPHandler(deps.UseCases)
+		HTTPHandler = user_handlers.NewUserHTTPHandler(deps.UseCases)
 		router      = NewUserHTTPRouter(deps.APIWithJWTRouterDeps, HTTPHandler)
 	)
 	router.Setup()

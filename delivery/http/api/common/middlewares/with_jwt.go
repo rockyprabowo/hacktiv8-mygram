@@ -2,15 +2,13 @@ package http_middlewares
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"rocky.my.id/git/mygram/delivery/http/api/common/helpers/jwt"
 )
 
-func WithJWTValidation(parserFunc jwt_helpers.ParserFunc) []echo.MiddlewareFunc {
-	jwtMiddlewareConfig := jwt_helpers.BuildEchoJWTMiddlewareConfig(parserFunc)
+func WithJWTValidation(jwtMiddleware echo.MiddlewareFunc, middlewares ...echo.MiddlewareFunc) []echo.MiddlewareFunc {
 
-	return []echo.MiddlewareFunc{
-		middleware.JWTWithConfig(jwtMiddlewareConfig),
+	jwtMiddlewares := []echo.MiddlewareFunc{
+		jwtMiddleware,
 		ValidateToken,
 	}
+	return append(jwtMiddlewares, middlewares...)
 }

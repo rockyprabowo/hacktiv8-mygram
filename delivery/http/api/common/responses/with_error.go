@@ -6,7 +6,7 @@ import (
 	"rocky.my.id/git/mygram/domain/exceptions"
 )
 
-func WithError(err error) error {
+func WithError[T error](err T) error {
 	if errors.Is(err, exceptions.EntityNotFound) {
 		return EchoErrorResponse(http.StatusNotFound, err.Error())
 	}

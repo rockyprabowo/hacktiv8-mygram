@@ -18,6 +18,7 @@ var MigrateCmd = &cobra.Command{
 
 func MigrateDB(ctx context.Context) {
 	db := database_connections.Init()
+
 	err := db.WithContext(ctx).
 		AutoMigrate(
 			&entities.User{},

@@ -3,43 +3,36 @@ package main
 import (
 	"github.com/spf13/viper"
 	"log"
+	"net/url"
+	"rocky.my.id/git/mygram/configurations/config"
 	"rocky.my.id/git/mygram/configurations/config/keys"
-	"strings"
 )
 
-func init() {
-	// Set configuration file type and name.
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
-	viper.SetConfigName("config")
-
-	// Set the default
-	viper.SetDefault(config_keys.BaseURL, "")
-	viper.SetDefault(config_keys.DatabaseEngine, "sqlite")
-	viper.SetDefault(config_keys.DatabaseDSN, "file::memory:?cache=shared")
-	viper.SetDefault(config_keys.Debug, true)
-	viper.SetDefault(config_keys.JWTSecret, "!PLEASE-CHANGE!")
-	viper.SetDefault(config_keys.Environment, "production")
-	viper.SetDefault(config_keys.HostAddress, "")
-	viper.SetDefault(config_keys.HostPort, "8005")
-	viper.SetDefault(config_keys.BcryptCost, 4)
-
-	// Bind to environment variables
-	_ = viper.BindEnv(config_keys.HostPort, "PORT")
-	_ = viper.BindEnv(config_keys.BaseURL, "RAILWAY_STATIC_URL")
-	_ = viper.BindEnv(config_keys.Environment, "RAILWAY_ENVIRONMENT")
-	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-	viper.AutomaticEnv()
-
-	// Read config
-	if readErr := viper.ReadInConfig(); readErr != nil {
-		//Write config file if it doesn't exist
-		if _, ok := readErr.(viper.ConfigFileNotFoundError); ok {
-			if writeErr := viper.SafeWriteConfig(); writeErr != nil {
-				log.Fatalf("Failed to create config file(s): %s", writeErr)
-			}
+func setDatabaseEngine() {
+	if !viper.IsSet(config_keys.DatabaseEngine) {
+		dbURL, err := url.Parse(viper.GetString(config_keys.DatabaseDSN))
+		if err != nil {
+			log.Println("Couldn't parse the database DSN as URL. Assuming SQLite database engine.")
+			viper.Set(config_keys.DatabaseEngine, "sqlite")
 			return
 		}
-		log.Fatalf("Failed to load config file: %s", readErr)
+		if dbURL.Scheme == "file" {
+			log.Println("Database URL starts with 'file'. Assuming SQLite database engine.")
+			viper.Set(config_keys.DatabaseEngine, "sqlite")
+			return
+		}
+		viper.Set(config_keys.DatabaseEngine, dbURL.Scheme)
+	}
+}
+
+func setDatabaseDSN() {
+	_ = viper.BindEnv(config_keys.DatabaseDSN, "DATABASE_URL")
+	if !viper.IsSet(config_keys.DatabaseDSN) {
+		_ = viper.BindEnv(config_keys.DatabaseDSN, "MYSQL_URL")
+	}
+	if !viper.IsSet(config_keys.DatabaseDSN) {
+		log.Println("Database DSN is not set. Using SQLite in-memory database")
+		viper.Set(config_keys.DatabaseEngine, config.DevDatabaseEngine)
+		viper.Set(config_keys.DatabaseDSN, config.DevDatabaseDSN)
 	}
 }

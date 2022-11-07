@@ -1,5 +1,5 @@
 ### RegisterUser
-POST http://{{host}}:{{port}}/users/register
+POST {{scheme}}{{host}}:{{port}}/users/register
 Accept: application/json
 Content-Type: application/json
 
@@ -24,7 +24,7 @@ client.test("Response content-type is json", function() {
 %}
 
 ### RegisterUserInvalid
-POST http://{{host}}:{{port}}/users/register
+POST {{scheme}}{{host}}:{{port}}/users/register
 Accept: application/json
 Content-Type: application/json
 
@@ -41,7 +41,7 @@ client.test("Request executed with Bad Request response", function() {
 %}
 
 ### LoginUser
-POST http://{{host}}:{{port}}/users/login
+POST {{scheme}}{{host}}:{{port}}/users/login
 Accept: application/json
 Content-Type: application/json
 
@@ -65,7 +65,7 @@ client.global.set("auth_token", response.body.token)
 %}
 
 ### GetCurrentUser
-GET http://{{host}}:{{port}}/me
+GET {{scheme}}{{host}}:{{port}}/me
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 
@@ -81,7 +81,7 @@ Accept: application/json
 %}
 
 ### CreateSocialMedia
-POST http://{{host}}:{{port}}/socialmedias
+POST {{scheme}}{{host}}:{{port}}/socialmedias
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 Content-Type: application/json
@@ -103,7 +103,7 @@ client.global.set("current_social_media_id", response.body.id)
 
 
 ### GetSocialMedia
-GET http://{{host}}:{{port}}/socialmedias
+GET {{scheme}}{{host}}:{{port}}/socialmedias
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 
@@ -121,7 +121,7 @@ client.test("Response content-type is json", function() {
 %}
 
 ### EditSocialMedia
-PUT http://{{host}}:{{port}}/socialmedias/{{current_social_media_id}}
+PUT {{scheme}}{{host}}:{{port}}/socialmedias/{{current_social_media_id}}
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 Content-Type: application/json
@@ -139,7 +139,7 @@ client.global.set("edited_social_media_url", response.body.social_media_url)
 %}
 
 ### GetSocialMediaAfterEdit
-GET http://{{host}}:{{port}}/socialmedias
+GET {{scheme}}{{host}}:{{port}}/socialmedias
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 
@@ -169,13 +169,13 @@ client.test("Response contains edited data.", function () {
 %}
 
 ### DeleteSocialMedia
-DELETE http://{{host}}:{{port}}/socialmedias/{{current_social_media_id}}
+DELETE {{scheme}}{{host}}:{{port}}/socialmedias/{{current_social_media_id}}
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 Content-Type: application/json
 
 ### GetSocialMediaAfterDelete
-GET http://{{host}}:{{port}}/socialmedias
+GET {{scheme}}{{host}}:{{port}}/socialmedias
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 
@@ -200,7 +200,7 @@ client.test("Response doesn't contains deleted data.", function () {
 %}
 
 ### PostPhoto
-POST http://{{host}}:{{port}}/photos
+POST {{scheme}}{{host}}:{{port}}/photos
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 Content-Type: application/json
@@ -208,7 +208,7 @@ Content-Type: application/json
 {
   "title": "Test",
   "caption": "This is a test.",
-  "photo_url": "https://www.unsplash.com/"
+  "photo_url": "{{scheme}}swww.unsplash.com/"
 }
 > {%
 client.test("Request executed successfully", function() {
@@ -224,8 +224,26 @@ client.global.set("current_photo_id", response.body.id)
 
  %}
 
+### GetPhoto
+GET {{scheme}}{{host}}:{{port}}/photos/{{current_photo_id}}
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+
+> {%
+
+client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+    const type = response.contentType.mimeType;
+    client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+%}
+
 ### GetPhotos
-GET http://{{host}}:{{port}}/photos
+GET {{scheme}}{{host}}:{{port}}/photos
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 
@@ -243,7 +261,7 @@ client.test("Response content-type is json", function() {
 %}
 
 ### UpdatePhoto
-PUT http://{{host}}:{{port}}/photos/{{current_photo_id}}
+PUT {{scheme}}{{host}}:{{port}}/photos/{{current_photo_id}}
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 Content-Type: application/json
@@ -251,7 +269,7 @@ Content-Type: application/json
 {
   "title": "Test EDITED",
   "caption": "This is a test.",
-  "photo_url": "https://www.unsplash.com/edited"
+  "photo_url": "{{scheme}}swww.unsplash.com/edited"
 }
 
 > {%
@@ -268,7 +286,7 @@ client.test("Response content-type is json", function() {
 %}
 
 ### GetPhotosAfterUpdate
-GET http://{{host}}:{{port}}/photos
+GET {{scheme}}{{host}}:{{port}}/photos
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 
@@ -286,7 +304,7 @@ client.test("Response content-type is json", function() {
 %}
 
 ### PostComment
-POST http://{{host}}:{{port}}/comments
+POST {{scheme}}{{host}}:{{port}}/comments
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 Content-Type: application/json
@@ -309,7 +327,7 @@ client.test("Response content-type is json", function() {
  %}
 
 ### GetComments
-GET http://{{host}}:{{port}}/comments
+GET {{scheme}}{{host}}:{{port}}/comments
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 
@@ -327,7 +345,7 @@ client.test("Response content-type is json", function() {
 %}
 
 ### UpdateComment
-PUT http://{{host}}:{{port}}/comments/{{current_comment_id}}
+PUT {{scheme}}{{host}}:{{port}}/comments/{{current_comment_id}}
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 Content-Type: application/json
@@ -350,7 +368,7 @@ client.test("Response content-type is json", function() {
 %}
 
 ### GetCommentsAfterUpdate
-GET http://{{host}}:{{port}}/comments
+GET {{scheme}}{{host}}:{{port}}/comments
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 
@@ -368,7 +386,7 @@ client.test("Response content-type is json", function() {
 %}
 
 ### DeleteComment
-DELETE http://{{host}}:{{port}}/comments/{{current_comment_id}}
+DELETE {{scheme}}{{host}}:{{port}}/comments/{{current_comment_id}}
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 Content-Type: application/json
@@ -387,7 +405,7 @@ client.test("Response content-type is json", function() {
 %}
 
 ### GetCommentsAfterDelete
-GET http://{{host}}:{{port}}/comments
+GET {{scheme}}{{host}}:{{port}}/comments
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 
@@ -405,7 +423,7 @@ client.test("Response content-type is json", function() {
 %}
 
 ### DeletePhoto
-DELETE http://{{host}}:{{port}}/photos/{{current_photo_id}}
+DELETE {{scheme}}{{host}}:{{port}}/photos/{{current_photo_id}}
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 Content-Type: application/json
@@ -424,7 +442,7 @@ client.test("Response content-type is json", function() {
 %}
 
 ### GetPhotosAfterDelete
-GET http://{{host}}:{{port}}/photos
+GET {{scheme}}{{host}}:{{port}}/photos
 Authorization: Bearer {{auth_token}}
 Accept: application/json
 

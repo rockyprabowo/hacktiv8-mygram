@@ -1,4 +1,4 @@
-package consts
+package constants
 
 const UserClaimsContextKey = "user"
 const Payload = "payload"
